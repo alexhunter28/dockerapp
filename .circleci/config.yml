@@ -26,14 +26,7 @@ jobs:
             docker tag dockerapp_dockerapp $DOCKER_HUB_USER_ID/dockerapp:latest
             docker push $DOCKER_HUB_USER_ID/dockerapp:$CIRCLE_SHA1
             docker push $DOCKER_HUB_USER_ID/dockerapp:latest
-      - run: 
-          name: Chmod add permissions to Shell 1
-          command:
-            chmod +x package.sh            
-      - run: 
-          name: Build image and push to ECR
-          command: 
-            ./package.sh
+
 
   deploy:  
     docker:
@@ -61,6 +54,12 @@ jobs:
             echo 'export ECR_REPOSITORY_NAME="${AWS_RESOURCE_NAME_PREFIX}"' >> $BASH_ENV
             echo 'export ECS_CLUSTER_NAME="dockerapp-cluster"' >> $BASH_ENV
             echo 'export ECS_SERVICE_NAME="dockerapp-service"' >> $BASH_ENV
+      - run:
+          name: Push image on ECR
+          command: |
+            . venv/bin/activate
+            eval $(aws ecr get-login --region $AWS_REGION --no-include-email)
+            docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY_NAME:$CIRCLE_SHA1
       - run:
           name: Deploy on ECS
           command: |
