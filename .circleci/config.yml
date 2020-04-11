@@ -3,8 +3,7 @@ jobs:
   build:
     working_directory: /dockerapp
     docker:
-      - image: docker:17.05.0-ce-git
-      - image: circleci/python:3.6.1
+      - image: docker:17.05.0-ce-git      
     steps:
       - checkout
       - setup_remote_docker     
@@ -38,6 +37,23 @@ jobs:
           name: Build image and push to ECR
           command: 
             ./package.sh
+
+  deploy:  
+    docker:
+      - image: circleci/python:3.6.1
+    environment:
+      AWS_DEFAULT_OUTPUT: json
+    steps:
+      - checkout
+      - setup_remote_docker
+      - attach_workspace:
+          at: workspace      
+      - run:
+          name: Install awscli
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
       - run:
           name: Setup common environment variables
           command: |
@@ -53,3 +69,11 @@ jobs:
             export EXECUTION_ROLE_ARN="arn:aws:iam::$AWS_ACCOUNT_ID:role/${AWS_RESOURCE_NAME_PREFIX}-ecs-execution-role"
             ./deploy.sh
      
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
