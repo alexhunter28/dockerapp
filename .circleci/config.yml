@@ -27,5 +27,7 @@ jobs:
             docker push $DOCKER_HUB_USER_ID/dockerapp:latest
       - run: 
           name: Build image and push to ECR
-          command: ./package.sh
+          command: 
+            - chmod +x deploy.sh
+            - ./package.sh
      
