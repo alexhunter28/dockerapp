@@ -27,10 +27,9 @@ jobs:
             docker push $DOCKER_HUB_USER_ID/dockerapp:$CIRCLE_SHA1
             docker push $DOCKER_HUB_USER_ID/dockerapp:latest
       - run: 
-          name: Chmod permissions to Shell
-          command: |
-            chmod +x package.sh
-            chmod +x deploy.sh
+          name: Chmod add permissions to Shell 1
+          command:
+            chmod +x package.sh            
       - run: 
           name: Build image and push to ECR
           command: 
@@ -50,7 +49,11 @@ jobs:
           name: Install awscli
           command: |
             python3 -m venv venv
-            . venv/bin/activate            
+            . venv/bin/activate   
+      - run: 
+          name: Chmod add permissions to Shell 2
+          command:            
+            chmod +x deploy.sh    
       - run:
           name: Setup common environment variables
           command: |
