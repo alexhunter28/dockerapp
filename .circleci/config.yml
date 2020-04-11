@@ -50,6 +50,7 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate   
+            pip install awscli>=1.15.50
       - run: 
           name: Chmod add permissions to Shell 2
           command:            
