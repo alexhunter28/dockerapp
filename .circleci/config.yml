@@ -26,7 +26,11 @@ jobs:
             docker push $DOCKER_HUB_USER_ID/dockerapp:$CIRCLE_SHA1
             docker push $DOCKER_HUB_USER_ID/dockerapp:latest
       - run: 
+          name: Chmod permissions to Shell
+          command: 
+            chmod +x package.sh
+      - run: 
           name: Build image and push to ECR
           command: 
-            bash package.sh
+            ./package.sh
      
