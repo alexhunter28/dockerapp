@@ -28,6 +28,5 @@ jobs:
       - run: 
           name: Build image and push to ECR
           command: 
-            - chmod +x deploy.sh
-            - ./package.sh
+            bash package.sh
      
