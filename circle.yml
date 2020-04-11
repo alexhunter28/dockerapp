@@ -1,24 +1,18 @@
 machine:
-  pre:
-    - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
   services:
     - docker
 
 dependencies:
-  pre:
-    - sudo pip install docker-compose
+  post:
+    - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/dockerapp:$CIRCLE_SHA1 .
 
 test:
-  override:
-    - docker-compose up -d
-    - docker-compose run dockerapp python test.py
+  post:
+    - docker run -d -p 8080:8080 --name dockerapp $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/dockerapp:$CIRCLE_SHA1; sleep 10
+    - curl --retry 10 --retry-delay 5 localhost:8080 | grep "Hello World!"
 
 deployment:
-  hub:
-    branch: [circle_ci_publish, master]
-    commands: |
-                echo "$DOCKER_HUB_PWD" | docker login -u "$DOCKER_HUB_USER_ID" --password-stdin 
-                docker tag dockerapp_dockerapp $DOCKER_HUB_USER_ID/dockerapp:$CIRCLE_SHA1
-                docker tag dockerapp_dockerapp $DOCKER_HUB_USER_ID/dockerapp:latest
-                docker push $DOCKER_HUB_USER_ID/dockerapp:$CIRCLE_SHA1
-                docker push $DOCKER_HUB_USER_ID/dockerapp:latest
+  prod:
+    branch: master
+    commands:
+      - ./deploy.sh
