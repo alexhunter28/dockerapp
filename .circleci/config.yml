@@ -28,16 +28,15 @@ jobs:
             docker push $DOCKER_HUB_USER_ID/dockerapp:latest
       
 
-  deploy:  
+  deploy:
+    working_directory: /dockerapp  
     docker:
       - image: circleci/python:3.6.1
     environment:
       AWS_DEFAULT_OUTPUT: json
     steps:
       - checkout
-      - setup_remote_docker
-      - attach_workspace:
-          at: workspace      
+      - setup_remote_docker      
       - run:
           name: Install awscli
           command: |
