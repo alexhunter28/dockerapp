@@ -48,7 +48,7 @@ make_task_def(){
         }
     ]'
     
-    task_def=$(printf "$task_template" $ECS_CONTAINER_DEFINITION_NAME $AWS_ACCOUNT_ID $AWS_DEFAULT_REGION $ECR_REPOSITORY_NAME $CIRCLE_SHA1)
+    task_def=$(printf "$task_template" $ECS_CONTAINER_DEFINITION_NAME $AWS_ACCOUNT_ID $AWS_REGION $ECR_REPOSITORY_NAME $CIRCLE_SHA1)
 }
 
 register_definition() {
