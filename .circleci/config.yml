@@ -59,7 +59,7 @@ jobs:
           command: |
             . venv/bin/activate
             eval $(aws ecr get-login --region $AWS_REGION --no-include-email)
-            docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY_NAME:$CIRCLE_SHA1
+            docker push 438693937837.dkr.ecr.us-east-2.amazonaws.com/dockerapp:$CIRCLE_SHA1
       - run:
           name: Deploy on ECS
           command: |
