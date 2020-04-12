@@ -8,13 +8,15 @@ deploy_cluster() {
     make_task_def   
     register_definition
 
-    if [[ $(aws ecs update-service --cluster $ECS_CLUSTER_NAME --service $ECS_SERVICE_NAME --task-definition $revision | \
+    if [[ $(aws ecs create-cluster --cluster-name $ECS_CLUSTER_NAME --region $AWS_REGION) ]]; then
+        echo "Error Creating cluster."                
+        return 1
+    fi
+
+
+    if [[ $(aws ecs update-service --cluster $ECS_CLUSTER_NAME --service $ECS_SERVICE_NAME --region $AWS_REGION --task-definition $revision | \
                    $JQ '.service.taskDefinition') != $revision ]]; then
-        echo "Error updating service."
-        echo $ECS_CLUSTER_NAME
-        echo $ECS_SERVICE_NAME
-        echo $revision
-        echo $JQ '.taskDefinition.taskDefinitionArn'
+        echo "Error updating service."                
         return 1
     fi
 
