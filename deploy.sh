@@ -14,6 +14,7 @@ deploy_cluster() {
         echo $ECS_CLUSTER_NAME
         echo $ECS_SERVICE_NAME
         echo $revision
+        echo $JQ '.taskDefinition.taskDefinitionArn'
         return 1
     fi
 
