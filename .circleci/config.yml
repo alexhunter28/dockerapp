@@ -70,7 +70,7 @@ jobs:
           name: Deploy on ECS
           command: |
             . venv/bin/activate
-            export ECS_TASK_FAMILY_NAME="${AWS_RESOURCE_NAME_PREFIX}-service"
+            export ECS_TASK_FAMILY_NAME="${AWS_RESOURCE_NAME_PREFIX}"
             export ECS_CONTAINER_DEFINITION_NAME="${AWS_RESOURCE_NAME_PREFIX}-service"
             export EXECUTION_ROLE_ARN="arn:aws:iam::438693937837:role/ecsTaskExecutionRole"
             ./deploy.sh
